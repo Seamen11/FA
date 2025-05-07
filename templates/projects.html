@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проекты</title>
+</head>
+<body>
+    <h1>Введите свои проекты для расчета</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Рассчитать</button>
+    </form>
+
+    {% if result %}
+        <h2>Результаты расчета:</h2>
+        <p><strong>Максимальная прибыль:</strong> {{ result.max_profit }}</p>
+        <p><strong>Стратегия:</strong> {{ result.strategy }}</p>
+        
+        <!-- Дальнейшие результаты (например, экономическая история) -->
+        <h3>Экономическая динамика:</h3>
+        <ul>
+            {% for item in result.econ_history %}
+                <li>Шаг: {{ item.step }}, Инфляция: {{ item.inflation }}, Процентная ставка: {{ item.interest_rate }}, Цена нефти: {{ item.oil_price }}, ВВП: {{ item.gdp }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

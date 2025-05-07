@@ -1,0 +1,41 @@
+<!-- templates/calculate.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты расчета</title>
+</head>
+<body>
+    <h1>Результаты расчета</h1>
+
+    <h2>Максимальная прибыль: {{ max_profit }}</h2>
+    <h3>Стратегия вложений:</h3>
+    <ul>
+        {% for amount in strategy %}
+            <li>{{ amount }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>История состояния:</h3>
+    <ul>
+        {% for state in states %}
+            <li>Этап {{ state.step }}: прибыль = {{ state.profit }}, оставшийся бюджет = {{ state.remaining_budget }}</li>
+        {% endfor %}
+    </ul>
+    <!-- В файле calculate.html -->
+    <h3>Графики</h3>
+    <div>
+        <img src="data:image/png;base64,{{ result.plot_data }}" alt="График">
+    </div>
+
+
+    <h3>Экономическая динамика:</h3>
+    <ul>
+        {% for econ in econ_history %}
+            <li>Этап {{ econ.step }}: инфляция = {{ econ.inflation }}, процентная ставка = {{ econ.interest_rate }}, цена нефти = {{ econ.oil_price }}, ВВП = {{ econ.gdp }}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

@@ -116,6 +116,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Путь к папке с вашими статичными файлами
+]
+CSRF_COOKIE_SECURE = False  # Для разработки (при использовании HTTPS, ставьте True)
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_NAME = 'csrftoken'  # Обычно это стандартное имя, но если вы меняли, проверьте
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

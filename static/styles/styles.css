@@ -1,0 +1,181 @@
+/* Основные стили для body */
+body {
+    background-color: #343a40;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+/* Контейнер для страницы */
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 960px;
+}
+
+/* Заголовки */
+h2, h4, h5 {
+    color: #f8f9fa;
+    text-align: center;
+}
+
+/* Стили для таблицы */
+.table-container {
+    margin-top: 30px;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #495057;
+}
+
+.table th, .table td {
+    text-align: center;
+}
+
+.table th {
+    background-color: #6c757d;
+}
+
+.table-dark {
+    background-color: #495057;
+}
+
+.table td input {
+    background-color: #343a40;
+    border: 1px solid #6c757d;
+    color: #fff;
+}
+
+.table td input:focus {
+    background-color: #495057;
+}
+
+/* Стили для анимации загрузки */
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 9999;
+}
+
+.loading img {
+    width: 50px;
+    height: 50px;
+}
+
+/* Формы и кнопки */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Стили для результатов */
+#resultContainer {
+    display: none;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #495057;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+}
+
+#resultContainer ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#resultContainer li {
+    margin-bottom: 10px;
+}
+
+h4, h5 {
+    margin-top: 20px;
+}
+
+#debugLog {
+    background-color: #212529;
+    color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Стили для кнопок на странице результатов */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Стили для раздела с подробной информацией */
+.collapse {
+    margin-top: 20px;
+}
+
+/* Стили для формы в home.html */
+form {
+    background-color: #495057;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+}
+
+form .form-group {
+    margin-bottom: 15px;
+}
+
+form .form-check-input {
+    margin-right: 10px;
+}
+
+/* Стили для кнопки выбора предустановленных значений */
+#useDefaultsBtn {
+    background-color: #17a2b8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#useDefaultsBtn:hover {
+    background-color: #138496;
+}
+
+/* Стили для переключателя загрузки */
+.loading {
+    display: none;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 767px) {
+    .container {
+        padding: 10px;
+    }
+
+    .table-container {
+        margin-top: 15px;
+        padding: 10px;
+    }
+
+    button {
+        padding: 8px 15px;
+    }
+}
