@@ -9,7 +9,9 @@
 </head>
 <body>
 <h1>Добро пожаловать!</h1>
-<p><a href="{% url 'projects_page' %}">Перейти к расчету проектов</a></p>
+<p><a href="{% url 'projects_page' %}">Ввести проекты и рассчитать (JSON)</a></p>
+<p><a href="{% url 'enter_projects_page' %}" class="btn btn-primary">Ввести проекты и рассчитать через таблицу</a></p>
+<p><a href="{% url 'parameters_page' %}">Задать параметры для модели</a></p>
 
 <div class="container py-5">
     <h2 class="text-center">Инвестиционная модель предприятия</h2>

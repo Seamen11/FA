@@ -1,38 +1,72 @@
-<!-- templates/calculate.html -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Результаты расчета</title>
+    <style>
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <h1>Результаты расчета</h1>
 
-    <h2>Максимальная прибыль: {{ max_profit }}</h2>
+    <!-- Параметры модели -->
+    <h2>Параметры модели</h2>
+    <p><strong>ВВП (GDP):</strong> {{ result.gdp }}</p>
+    <p><strong>Процентная ставка (Interest Rate):</strong> {{ result.interest_rate }}</p>
+    <p><strong>Курс обмена (Exchange Rate):</strong> {{ result.exchange_rate }}</p>
+    <p><strong>Цена нефти (Oil Price):</strong> {{ result.oil_price }}</p>
+    <p><strong>Инфляция (Inflation):</strong> {{ result.inflation }}</p>
+    <p><strong>Санкции:</strong> {{ result.sanctions }}</p>
+    <p><strong>Условия рынка (Market Condition):</strong> {{ result.market_condition }}</p>
+
+    <!-- Проекты -->
+    <h2>Проекты</h2>
+    {% for project in result.projects %}
+        <h3>Проект {{ forloop.counter }}</h3>
+        <p><strong>Уровни инвестиций (Levels):</strong> {{ project.levels }}</p>
+        <p><strong>Прибыль (Profits):</strong> {{ project.profits }}</p>
+    {% endfor %}
+
+    <!-- Результаты расчёта -->
+    <h2>Результаты расчёта</h2>
+    <p><strong>Максимальная прибыль:</strong> {{ result.max_profit }}</p>
     <h3>Стратегия вложений:</h3>
     <ul>
-        {% for amount in strategy %}
+        {% for amount in result.strategy %}
             <li>{{ amount }}</li>
         {% endfor %}
     </ul>
 
     <h3>История состояния:</h3>
     <ul>
-        {% for state in states %}
+        {% for state in result.states %}
             <li>Этап {{ state.step }}: прибыль = {{ state.profit }}, оставшийся бюджет = {{ state.remaining_budget }}</li>
         {% endfor %}
     </ul>
-    <!-- В файле calculate.html -->
+
     <h3>Графики</h3>
     <div>
         <img src="data:image/png;base64,{{ result.plot_data }}" alt="График">
     </div>
 
-
     <h3>Экономическая динамика:</h3>
     <ul>
-        {% for econ in econ_history %}
+        {% for econ in result.econ_history %}
             <li>Этап {{ econ.step }}: инфляция = {{ econ.inflation }}, процентная ставка = {{ econ.interest_rate }}, цена нефти = {{ econ.oil_price }}, ВВП = {{ econ.gdp }}</li>
         {% endfor %}
     </ul>
