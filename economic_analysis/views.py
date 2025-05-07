@@ -3,11 +3,9 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-import json
-
 from .forms import ProjectForm
-from .model_core import GlobalEconomy, CompanyEconomy, State, InvestmentModel  # Ваши классы
-
+import json
+from .model_core import GlobalEconomy, CompanyEconomy, State, InvestmentModel
 
 
 def plot_to_base64(states, econ_history):
@@ -51,81 +49,17 @@ def plot_to_base64(states, econ_history):
 
 
 def home(request):
-    result = None
-    projects = [
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 20, 44, 60, 75, 85, 95]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0,  5, 51, 70, 80, 90, 100]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 10, 50, 65, 75, 85, 90]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0,  8, 44, 60, 72, 85, 90]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 16, 39, 55, 76, 92, 99]}
-    ]
-
-    result = None  # Изначально результат пустой
-    if request.method == "POST":
-        # Выполняем расчёты только при POST-запросе
-        # Здесь будет код для расчётов вашей инвестиционной модели
-        global_econ = GlobalEconomy(
-            gdp=100.0,
-            interest_rate=0.05,
-            exchange_rate=1.0,
-            oil_price=50.0,
-            inflation=0.03,
-            sanctions=False
-        )
-        # 💡 Добавим последовательность шоков и усилим волатильность
-        shock_sequence = ["neutral", "rate_hike", "oil_crisis", "financial_crisis", "neutral"]
-        global_econ.oil_price_vol = 0.5
-        global_econ.exchange_vol = 0.3
-        global_econ.gdp_growth_vol = 0.05
-
-        print("Волатильности:")
-        print({
-            "oil_price_vol": global_econ.oil_price_vol,
-            "exchange_vol": global_econ.exchange_vol,
-            "gdp_growth_vol": global_econ.gdp_growth_vol
-        })
-
-        company_econ = CompanyEconomy(
-            debt=0.0,
-            amortization_type='linear',
-            accumulated_loss=0.0,
-            loan_term=5,
-            global_economy=global_econ,
-            dividend_percentage=0.05
-        )
-        initial_state = State(
-            budget=300,
-            market_condition="neutral",
-            global_econ=global_econ,
-            company_econ=company_econ
-        )
-
-        model = InvestmentModel(projects, step=50, initial_state=initial_state)
-        max_profit, strategy, states, econ_history = model.optimize()
-
-        # Генерация графиков
-        plot_data = plot_to_base64(states, econ_history)
-
-        result = {
-            'max_profit': max_profit,
-            'strategy': strategy,
-            'states': states,
-            'econ_history': econ_history,
-            'plot_data': plot_data
-        }
-
-        return render(request, 'home.html', {'result': result})
-
-    # Если GET-запрос, просто рендерим страницу с пустыми результатами
-    return render(request, 'home.html', {'result': result, 'projects': projects})
-
+    return render(request, 'home.html')
 
 def projects_page(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
 
         if form.is_valid():
-            # Создаем объект GlobalEconomy
+            # Получаем значение бюджета из формы
+            budget = form.cleaned_data['budget']
+
+            # Создаем объекты GlobalEconomy и CompanyEconomy
             global_econ = GlobalEconomy(
                 gdp=100.0,
                 interest_rate=0.05,
@@ -135,7 +69,6 @@ def projects_page(request):
                 sanctions=False
             )
 
-            # Создаем объект CompanyEconomy
             company_econ = CompanyEconomy(
                 debt=0.0,
                 amortization_type='linear',
@@ -147,7 +80,7 @@ def projects_page(request):
 
             # Инициализируем начальное состояние
             initial_state = State(
-                budget=300,  # начальный бюджет
+                budget=budget,
                 market_condition="neutral",  # начальные условия рынка
                 global_econ=global_econ,
                 company_econ=company_econ
@@ -155,63 +88,56 @@ def projects_page(request):
 
             # Получаем данные проектов из формы
             projects_str = form.cleaned_data['projects']
-            print("Проекты из формы:", projects_str)  # Для отладки
-
-            # Парсим строку JSON в список словарей
             try:
-                projects = json.loads(projects_str)
-                print("Проекты после парсинга:", projects)
+                projects = json.loads(projects_str) if isinstance(projects_str, str) else projects_str
             except json.JSONDecodeError:
                 return HttpResponse("Ошибка в формате JSON", status=400)
 
             # Создаем инвестиционную модель
             investment_model = InvestmentModel(projects=projects, initial_state=initial_state)
-
-            # Запускаем оптимизацию
             max_profit, strategy, states, econ_history = investment_model.optimize()
 
             # Генерация графика
             plot_data = plot_to_base64(states, econ_history)
 
-            # Передаем данные в шаблон
-            return render(request, 'calculate.html', {
+            # Передаем данные в шаблон для отображения результатов
+            result = {
                 'max_profit': max_profit,
                 'strategy': strategy,
                 'states': states,
                 'econ_history': econ_history,
-                'plot_data': plot_data  # Передаем график в шаблон
-            })
+                'plot_data': plot_data,
+                'budget': budget,
+                'gdp': global_econ.gdp,
+                'interest_rate': global_econ.interest_rate,
+                'exchange_rate': global_econ.exchange_rate,
+                'oil_price': global_econ.oil_price,
+                'inflation': global_econ.inflation,
+                'sanctions': global_econ.sanctions,
+                'market_condition': initial_state.market_condition,
+                'projects': projects
+            }
+
+            return render(request, 'calculate.html', {'result': result})
     else:
         form = ProjectForm()
 
     return render(request, 'projects.html', {'form': form})
 
-
-import json
-from django.shortcuts import render
-from .forms import ProjectForm
-from .model_core import GlobalEconomy, CompanyEconomy, State, InvestmentModel  # Ваши классы
-
-
 def enter_projects_page(request):
-    # Начальные проекты для примера (будет заменено динамическими)
-    projects = [
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 20, 44, 60, 75, 85, 95]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 5, 51, 70, 80, 90, 100]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 10, 50, 65, 75, 85, 90]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 8, 44, 60, 72, 85, 90]},
-        {'levels': [0, 50, 100, 150, 200, 250, 300], 'profits': [0, 16, 39, 55, 76, 92, 99]}
-    ]
-
     if request.method == 'POST':
-        # Инициализация глобальной и корпоративной экономики
+        # Получаем начальный бюджет
+        budget = float(request.POST.get('budget', 300))  # Начальный бюджет
+        print(f"Начальный бюджет: {budget}")
+
+        # Инициализация глобальной и корпоративной экономики с дефолтными значениями
         global_econ = GlobalEconomy(
-            gdp=100.0,
-            interest_rate=0.05,
-            exchange_rate=1.0,
-            oil_price=50.0,
-            inflation=0.03,
-            sanctions=False
+            gdp=100.0,  # Значение по умолчанию для ВВП
+            interest_rate=0.05,  # Значение по умолчанию для процентной ставки
+            exchange_rate=1.0,  # Значение по умолчанию для курса обмена
+            oil_price=50.0,  # Значение по умолчанию для цены нефти
+            inflation=0.03,  # Значение по умолчанию для инфляции
+            sanctions=False  # Значение по умолчанию для санкций
         )
 
         company_econ = CompanyEconomy(
@@ -224,7 +150,7 @@ def enter_projects_page(request):
         )
 
         initial_state = State(
-            budget=300,  # начальный бюджет
+            budget=budget,  # Используем полученное значение бюджета
             market_condition="neutral",  # начальные условия рынка
             global_econ=global_econ,
             company_econ=company_econ
@@ -232,19 +158,23 @@ def enter_projects_page(request):
 
         # Получаем данные проектов из формы
         projects_data = []
-
-        # Проходим по всем проектам, которые переданы в форму
         i = 1
         while f'project_{i}_levels' in request.POST and f'project_{i}_profits' in request.POST:
-            levels = request.POST.get(f'project_{i}_levels')
-            profits = request.POST.get(f'project_{i}_profits')
+            levels_str = request.POST.get(f'project_{i}_levels', '')
+            profits_str = request.POST.get(f'project_{i}_profits', '')
 
-            if levels and profits:
-                levels = list(map(int, levels.split(',')))  # Преобразуем строки в список чисел
-                profits = list(map(int, profits.split(',')))
-                projects_data.append({'levels': levels, 'profits': profits})
+            if levels_str and profits_str:
+                try:
+                    levels = list(map(int, levels_str.split(',')))  # Преобразуем строки в список чисел
+                    profits = list(map(int, profits_str.split(',')))
+                    projects_data.append({'levels': levels, 'profits': profits})
+                except ValueError:
+                    return HttpResponse("Ошибка в формате данных для уровней инвестиций или прибыли", status=400)
 
             i += 1
+
+        if not projects_data:
+            return HttpResponse("Не указаны проекты для расчета.", status=400)
 
         # Создаем инвестиционную модель с полученными проектами
         investment_model = InvestmentModel(projects=projects_data, initial_state=initial_state)
@@ -256,16 +186,26 @@ def enter_projects_page(request):
         plot_data = plot_to_base64(states, econ_history)
 
         # Передаем данные в шаблон
-        return render(request, 'calculate.html', {
+        result = {
             'max_profit': max_profit,
             'strategy': strategy,
             'states': states,
             'econ_history': econ_history,
-            'plot_data': plot_data  # Передаем график в шаблон
-        })
+            'plot_data': plot_data,
+            'budget': budget,
+            'gdp': global_econ.gdp,
+            'interest_rate': global_econ.interest_rate,
+            'exchange_rate': global_econ.exchange_rate,
+            'oil_price': global_econ.oil_price,
+            'inflation': global_econ.inflation,
+            'sanctions': global_econ.sanctions,
+            'market_condition': initial_state.market_condition,
+        }
+
+        return render(request, 'calculate.html', {'result': result})
 
     # Если GET-запрос, просто рендерим страницу с текущими данными
-    return render(request, 'enter_projects.html', {'projects': projects})
+    return render(request, 'enter_projects.html')
 
 
 def parameters_page(request):

@@ -1,181 +1,84 @@
-/* Основные стили для body */
+/* Общие стили */
 body {
-    background-color: #343a40;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #a1c4fd, #c2e9fb); /* Сдержанный градиент */
+    color: #2f2f2f; /* Темно-серый текст, чтобы не отвлекал */
+    margin: 0;
+    padding: 0;
 }
 
-/* Контейнер для страницы */
 .container {
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Минимальная высота страницы, чтобы контент был по центру */
     padding: 20px;
-    max-width: 960px;
 }
 
-/* Заголовки */
-h2, h4, h5 {
-    color: #f8f9fa;
+.main-content {
     text-align: center;
+    max-width: 900px;
+    width: 100%;
 }
 
-/* Стили для таблицы */
-.table-container {
-    margin-top: 30px;
-    border: 1px solid #cccccc;
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #495057;
-}
-
-.table th, .table td {
-    text-align: center;
-}
-
-.table th {
-    background-color: #6c757d;
-}
-
-.table-dark {
-    background-color: #495057;
-}
-
-.table td input {
-    background-color: #343a40;
-    border: 1px solid #6c757d;
-    color: #fff;
-}
-
-.table td input:focus {
-    background-color: #495057;
-}
-
-/* Стили для анимации загрузки */
-.loading {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: none;
-    z-index: 9999;
-}
-
-.loading img {
-    width: 50px;
-    height: 50px;
-}
-
-/* Формы и кнопки */
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-button:focus {
-    outline: none;
-}
-
-/* Стили для результатов */
-#resultContainer {
-    display: none;
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #495057;
-    border-radius: 10px;
-    border: 1px solid #cccccc;
-}
-
-#resultContainer ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-#resultContainer li {
-    margin-bottom: 10px;
-}
-
-h4, h5 {
-    margin-top: 20px;
-}
-
-#debugLog {
-    background-color: #212529;
-    color: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
-}
-
-/* Стили для кнопок на странице результатов */
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-}
-
-/* Стили для раздела с подробной информацией */
-.collapse {
-    margin-top: 20px;
-}
-
-/* Стили для формы в home.html */
-form {
-    background-color: #495057;
-    padding: 30px;
-    border-radius: 10px;
-    border: 1px solid #cccccc;
-}
-
-form .form-group {
-    margin-bottom: 15px;
-}
-
-form .form-check-input {
-    margin-right: 10px;
-}
-
-/* Стили для кнопки выбора предустановленных значений */
-#useDefaultsBtn {
-    background-color: #17a2b8;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+.heading {
+    font-size: 28px;
     margin-bottom: 20px;
+    color: #333; /* Темный цвет для заголовка */
+    font-weight: 600;
 }
 
-#useDefaultsBtn:hover {
-    background-color: #138496;
+.description {
+    font-size: 16px;
+    margin-bottom: 40px;
+    color: #555; /* Легкий серый для описания */
 }
 
-/* Стили для переключателя загрузки */
-.loading {
-    display: none;
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Между кнопками */
+    align-items: center;
 }
 
-/* Стили для мобильных устройств */
-@media (max-width: 767px) {
-    .container {
-        padding: 10px;
+.btn-nav {
+    background-color: #4e6dff; /* Умеренный синий цвет */
+    color: white;
+    font-size: 18px;
+    padding: 14px 28px;
+    text-decoration: none;
+    border-radius: 40px;
+    width: 80%;
+    max-width: 400px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent; /* Убираем акцент на рамки */
+}
+
+.btn-nav:hover {
+    background-color: #365df0; /* Темный оттенок синего при наведении */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-nav:focus {
+    outline: none;
+    border-color: #365df0; /* Подсветка при фокусе */
+}
+
+/* Добавляем адаптивность */
+@media (min-width: 768px) {
+    .btn-nav {
+        font-size: 20px;
+        padding: 16px 32px;
     }
+}
 
-    .table-container {
-        margin-top: 15px;
-        padding: 10px;
+/* Добавим отступы и стиль кнопок на мобильных устройствах */
+@media (max-width: 576px) {
+    .heading {
+        font-size: 22px;
     }
-
-    button {
-        padding: 8px 15px;
+    .description {
+        font-size: 14px;
     }
 }

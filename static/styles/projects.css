@@ -1,0 +1,162 @@
+/* projects.css */
+
+/* Основные стили для страницы */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #a1c4fd, #c2e9fb); /* Градиент */
+    color: #2f2f2f;
+    margin: 0;
+    padding: 0;
+}
+
+/* Контейнер страницы */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Оформление основного контента */
+.main-content {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-left: 20%; /* Отступ слева */
+    margin-right: 20%; /* Отступ справа */
+}
+
+/* Заголовок страницы */
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+}
+
+/* Описание страницы */
+.description {
+    font-size: 16px;
+    margin-bottom: 40px;
+    color: #555;
+}
+
+/* Стиль формы */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Отступы между элементами */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+form input {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+form button {
+    padding: 12px 20px;
+    font-size: 18px;
+    background-color: #4e6dff;
+    color: white;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    width: auto;
+    margin: 20px auto 0;
+}
+
+form button:hover {
+    background-color: #365df0;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+form button:focus {
+    outline: none;
+}
+
+/* Кнопка "Вернуться на главную" */
+.back-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 30px;
+    font-size: 16px;
+    color: #4e6dff;
+    border: 2px solid #4e6dff;
+    border-radius: 50px;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #4e6dff;
+    color: white;
+}
+
+/* Результаты расчётов */
+h2 {
+    margin-top: 30px;
+    font-size: 24px;
+    color: #333;
+}
+
+h3 {
+    font-size: 20px;
+    margin-top: 20px;
+    color: #555;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul li {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+    /* Для мобильных устройств */
+    .main-content {
+        margin-left: 5%; /* Отступ слева */
+        margin-right: 5%; /* Отступ справа */
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    form input {
+        padding: 10px;
+    }
+
+    form button {
+        font-size: 16px;
+        padding: 10px 18px;
+    }
+
+    .back-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}

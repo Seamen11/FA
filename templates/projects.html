@@ -1,30 +1,60 @@
+{% load static %}
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Проекты</title>
+    <link href="{% static 'styles/global.css' %}" rel="stylesheet">
+    <link href="{% static 'styles/projects.css' %}" rel="stylesheet">
 </head>
 <body>
-    <h1>Введите свои проекты для расчета</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Рассчитать</button>
-    </form>
+    <div class="container">
+        <div class="main-content">
+            <h1>Введите свои проекты для расчета</h1>
 
-    {% if result %}
-        <h2>Результаты расчета:</h2>
-        <p><strong>Максимальная прибыль:</strong> {{ result.max_profit }}</p>
-        <p><strong>Стратегия:</strong> {{ result.strategy }}</p>
-        
-        <!-- Дальнейшие результаты (например, экономическая история) -->
-        <h3>Экономическая динамика:</h3>
-        <ul>
-            {% for item in result.econ_history %}
-                <li>Шаг: {{ item.step }}, Инфляция: {{ item.inflation }}, Процентная ставка: {{ item.interest_rate }}, Цена нефти: {{ item.oil_price }}, ВВП: {{ item.gdp }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+            <!-- Кнопка "Вернуться на главную" -->
+            <a href="{% url 'home' %}" class="back-btn">Вернуться на главную</a>
+
+            <!-- Форма для ввода проектов -->
+            <form method="POST" action="{% url 'projects_page' %}">
+                {% csrf_token %}
+                {{ form.as_p }}  <!-- Это выводит все остальные поля формы, включая проект -->
+
+                <!-- Убираем поле начального бюджета из шаблона -->
+                <div class="budget-buttons">
+                    <button type="button" onclick="adjustBudget(50)">+50</button>
+                    <button type="button" onclick="adjustBudget(100)">+100</button>
+                    <button type="button" onclick="adjustBudget(200)">+200</button>
+                </div>
+
+                <!-- Не добавляем второй input для бюджета, он уже есть в форме -->
+                <button type="submit">Рассчитать</button>
+            </form>
+
+
+            {% if result %}
+                <h2>Результаты расчета:</h2>
+                <p><strong>Максимальная прибыль:</strong> {{ result.max_profit }}</p>
+                <p><strong>Стратегия:</strong> {{ result.strategy }}</p>
+
+                <!-- Дальнейшие результаты (например, экономическая история) -->
+                <h3>Экономическая динамика:</h3>
+                <ul>
+                    {% for item in result.econ_history %}
+                        <li>Шаг: {{ item.step }}, Инфляция: {{ item.inflation }}, Процентная ставка: {{ item.interest_rate }}, Цена нефти: {{ item.oil_price }}, ВВП: {{ item.gdp }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Функция для увеличения бюджета
+        function adjustBudget(amount) {
+            let budgetField = document.getElementById("id_budget"); // Убедитесь, что у элемента ID - это id_budget
+            let currentBudget = parseInt(budgetField.value);
+            budgetField.value = currentBudget + amount;
+        }
+    </script>
 </body>
 </html>
