@@ -1,0 +1,121 @@
+/* projects.css */
+
+/* Основные стили для страницы */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #a1c4fd, #c2e9fb); /* Градиент */
+    color: #2f2f2f;
+    margin: 0;
+    padding: 0;
+}
+
+/* Контейнер страницы */
+.container {
+    display: flex;
+    flex-direction: column;  /* Элементы будут располагаться вертикально */
+    justify-content: center;  /* Выравнивание по вертикали (по центру) */
+    align-items: center;  /* Выравнивание по горизонтали (по центру) */
+    min-height: 70vh;  /* Высота контейнера будет 100% от высоты экрана */
+    padding-top: 10vh;  /* Отступ сверху 10% от высоты экрана */
+}
+
+/* Оформление основного контента */
+.main-content {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок страницы */
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 700;
+    text-align: center;  /* Центрируем заголовок */
+}
+
+/* Кнопка "Вернуться на главную" */
+.back-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 30px;
+    font-size: 16px;
+    color: #4e6dff;
+    border: 2px solid #4e6dff;
+    border-radius: 50px;
+    background-color: white;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #4e6dff;
+    color: white;
+}
+
+/* Поле ввода бюджета */
+.budget-input {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.budget-input label {
+    font-size: 16px;
+    color: #555;
+}
+
+.budget-input input {
+    padding: 12px;
+    width: 50%;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+/* Оформление таблицы проектов */
+table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+}
+
+table input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+/* Кнопки */
+.add-project-btn, .submit-btn {
+    padding: 12px 20px;
+    font-size: 18px;
+    background-color: #4e6dff;
+    color: white;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    width: auto;
+    margin: 20px 0;
+}
+
+.add-project-btn:hover, .submit-btn:hover {
+    background-color: #365df0;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.add-project-btn:focus, .submit-btn:focus {
+    outline: none;
+}
