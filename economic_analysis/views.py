@@ -211,6 +211,8 @@ def enter_projects_page(request):
 def parameters_page(request):
     result = None
     if request.method == 'POST':
+        budget = float(request.POST.get('budget', 300))
+        print(f"Полученный начальный бюджет: {budget}")
         # Получаем параметры из формы
         gdp = float(request.POST.get('gdp', 100.0))
         interest_rate = float(request.POST.get('interest_rate', 0.05))
@@ -219,6 +221,9 @@ def parameters_page(request):
         inflation = float(request.POST.get('inflation', 0.03))
         sanctions = request.POST.get('sanctions') == 'True'
         market_condition = request.POST.get('market_condition', 'neutral')
+
+        # Получаем начальный бюджет из формы
+        print(f"Полученный начальный бюджет: {budget}")
 
         # Создаем объекты экономики
         global_econ = GlobalEconomy(
@@ -239,8 +244,9 @@ def parameters_page(request):
             dividend_percentage=0.05
         )
 
+        # Используем переданный начальный бюджет
         initial_state = State(
-            budget=300,
+            budget=budget,
             market_condition=market_condition,
             global_econ=global_econ,
             company_econ=company_econ
@@ -265,6 +271,7 @@ def parameters_page(request):
 
             project_count += 1
 
+
         # Если проектов не было добавлено
         if not projects:
             return HttpResponse("Проекты не были добавлены корректно", status=400)
@@ -287,10 +294,12 @@ def parameters_page(request):
 
     return render(request, 'parameters.html', {'result': result})
 
+
 def calculate_page(request):
     result = None
     if request.method == 'POST':
         # Считываем параметры из формы
+        budget = float(request.POST.get('budget', 300))
         gdp = float(request.POST['gdp'])
         interest_rate = float(request.POST['interest_rate'])
         exchange_rate = float(request.POST['exchange_rate'])
@@ -339,7 +348,7 @@ def calculate_page(request):
             dividend_percentage=0.05
         )
         initial_state = State(
-            budget=300,
+            budget=budget,
             market_condition=market_condition,
             global_econ=global_econ,
             company_econ=company_econ
@@ -354,6 +363,7 @@ def calculate_page(request):
 
         # Передаем результаты на страницу
         result = {
+            'budget': budget,
             'gdp': gdp,
             'interest_rate': interest_rate,
             'exchange_rate': exchange_rate,

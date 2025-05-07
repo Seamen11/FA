@@ -1,8 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Задать параметры для модели</title>
+    <link href="{% static 'styles/global.css' %}" rel="stylesheet">
+    <link href="{% static 'styles/projects.css' %}" rel="stylesheet">
+    <link href="{% static 'styles/enter_projects.css' %}" rel="stylesheet">
+
     <style>
         table {
             width: 100%;
@@ -19,100 +24,138 @@
         th {
             background-color: #f2f2f2;
         }
-        .add-project-btn {
-            margin-top: 10px;
+        /* Стиль для выпадающих списков (select) */
+        /* Стиль для выпадающих списков (select) */
+        .form-group select {
+            -webkit-appearance: none; /* Убираем стандартный стиль на некоторых браузерах (например, Safari) */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M5 6L0 0h10L5 6z' fill='%23222'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px 6px;
+            
+            /* Увеличение высоты выпадающего списка */
+            height: 40px; /* Измените на нужное значение */
+            padding: 10px; /* Увеличивает пространство внутри */
+            
+            /* Также можно установить размер шрифта */
+            font-size: 16px;
+            
+            width: 50%; /* Ширина, по аналогии с другими полями ввода */
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background-color: white;
         }
+        
+        /* Маленький текст (small) под полями ввода */
+        .form-group small {
+            display: block;
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+
     </style>
 </head>
 <body>
-    <h1>Задайте параметры для инвестиционной модели</h1>
-    <form method="POST" id="parameters-form" action="{% url 'calculate' %}">
-        {% csrf_token %}
-        
-        <!-- Параметры для модели -->
-        <div>
-            <label for="gdp">ВВП (GDP):</label>
-            <input type="number" id="gdp" name="gdp" value="100.0" step="any" required>
-            <small>Введите числовое значение для ВВП</small>
-        </div>
+    <div class="container">
+        <h1>Задайте параметры для инвестиционной модели</h1>
 
-        <div>
-            <label for="interest_rate">Процентная ставка (Interest Rate):</label>
-            <input type="number" id="interest_rate" name="interest_rate" value="0.05" step="any" required>
-            <small>Введите процентную ставку в виде десятичного числа (например, 0.05 для 5%)</small>
-        </div>
-
-        <div>
-            <label for="exchange_rate">Курс обмена (Exchange Rate):</label>
-            <input type="number" id="exchange_rate" name="exchange_rate" value="1.0" step="any" required>
-            <small>Введите курс обмена (например, 1.0 для стабильного курса)</small>
-        </div>
-
-        <div>
-            <label for="oil_price">Цена нефти (Oil Price):</label>
-            <input type="number" id="oil_price" name="oil_price" value="50.0" step="any" required>
-            <small>Введите цену нефти (например, 50.0 для базовой цены)</small>
-        </div>
-
-        <div>
-            <label for="inflation">Инфляция (Inflation):</label>
-            <input type="number" id="inflation" name="inflation" value="0.03" step="any" required>
-            <small>Введите уровень инфляции (например, 0.03 для 3%)</small>
-        </div>
-
-        <div>
-            <label for="sanctions">Санкции:</label>
-            <select name="sanctions" id="sanctions">
-                <option value="False">Нет</option>
-                <option value="True">Да</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="market_condition">Условия рынка (Market Condition):</label>
-            <select name="market_condition" id="market_condition">
-                <option value="neutral">Нейтральное</option>
-                <option value="good">Хорошее</option>
-                <option value="bad">Плохое</option>
-            </select>
-        </div>
-
-        <!-- Ввод проектов -->
-        <h2>Введите проекты</h2>
-        <table id="projects-table">
-            <thead>
-                <tr>
-                    <th>Проект</th>
-                    <th>Уровни инвестиций (Levels)</th>
-                    <th>Прибыль (Profits)</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Проект 1</td>
-                    <td><input type="text" name="project_1_levels" value="0, 50, 100, 150, 200" required></td>
-                    <td><input type="text" name="project_1_profits" value="0, 20, 44, 60, 75" required></td>
-                    <td><button type="button" onclick="removeRow(this)">Удалить</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="button" id="add-project-btn" class="add-project-btn">Добавить проект</button>
-
-        <form method="POST" action="{% url 'calculate' %}" id="parameters-form">
+        <form method="POST" id="parameters-form" action="{% url 'calculate' %}">
             {% csrf_token %}
-            <!-- Поля ввода параметров и проектов -->
-            <button type="submit">Применить параметры</button>
+
+            <!-- Параметры для модели -->
+            <div class="form-group">
+                <label for="gdp">ВВП (GDP):</label>
+                <input type="number" id="gdp" name="gdp" value="100.0" step="any" required>
+                <small>Введите числовое значение для ВВП</small>
+            </div>
+
+            <div class="form-group">
+                <label for="interest_rate">Процентная ставка (Interest Rate):</label>
+                <input type="number" id="interest_rate" name="interest_rate" value="0.05" step="any" required>
+                <small>Введите процентную ставку в виде десятичного числа (например, 0.05 для 5%)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="exchange_rate">Курс обмена (Exchange Rate):</label>
+                <input type="number" id="exchange_rate" name="exchange_rate" value="1.0" step="any" required>
+                <small>Введите курс обмена (например, 1.0 для стабильного курса)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="oil_price">Цена нефти (Oil Price):</label>
+                <input type="number" id="oil_price" name="oil_price" value="50.0" step="any" required>
+                <small>Введите цену нефти (например, 50.0 для базовой цены)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="inflation">Инфляция (Inflation):</label>
+                <input type="number" id="inflation" name="inflation" value="0.03" step="any" required>
+                <small>Введите уровень инфляции (например, 0.03 для 3%)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="sanctions">Санкции:</label>
+                <select name="sanctions" id="sanctions">
+                    <option value="False">Нет</option>
+                    <option value="True">Да</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="market_condition">Условия рынка (Market Condition):</label>
+                <select name="market_condition" id="market_condition">
+                    <option value="neutral">Нейтральное</option>
+                    <option value="good">Хорошее</option>
+                    <option value="bad">Плохое</option>
+                </select>
+            </div>
+            <!-- Поле для ввода начального бюджета -->
+            <!-- Поле для ввода начального бюджета -->
+            <div class="budget-input">
+                <label for="budget">Начальный бюджет</label>
+                <input type="number" id="budget" name="budget" value="300" required>
+            </div>
+
+
+            <!-- Ввод проектов -->
+            <h2>Введите проекты</h2>
+            <table id="projects-table">
+                <thead>
+                    <tr>
+                        <th>Проект</th>
+                        <th>Уровни инвестиций (Levels)</th>
+                        <th>Прибыль (Profits)</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Проект 1</td>
+                        <td><input type="text" name="project_1_levels" value="0, 50, 100, 150, 200" required></td>
+                        <td><input type="text" name="project_1_profits" value="0, 20, 44, 60, 75" required></td>
+                        <td><button type="button" onclick="removeRow(this)">Удалить</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" id="add-project-btn" class="add-project-btn">Добавить проект</button>
+
+            <!-- Кнопка отправки формы -->
+            <div class="buttons">
+                <button type="submit" class="submit-btn">Применить параметры</button>
+            </div>
         </form>
 
-    </form>
-
-    {% if result %}
-        <h2>Результаты расчёта</h2>
-        <p>Максимальная прибыль: {{ result.max_profit }}</p>
-        <p>Стратегия: {{ result.strategy }}</p>
-        <img src="data:image/png;base64,{{ result.plot_data }}" alt="График">
-    {% endif %}
+        {% if result %}
+            <h2>Результаты расчёта</h2>
+            <p>Максимальная прибыль: {{ result.max_profit }}</p>
+            <p>Стратегия: {{ result.strategy }}</p>
+            <img src="data:image/png;base64,{{ result.plot_data }}" alt="График">
+        {% endif %}
+    </div>
 
     <script>
         // Функция для добавления нового проекта
@@ -134,6 +177,5 @@
             button.closest('tr').remove();
         }
     </script>
-
 </body>
 </html>
