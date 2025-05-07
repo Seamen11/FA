@@ -62,6 +62,7 @@
 <body>
     <div class="container">
         <h1>Задайте параметры для инвестиционной модели</h1>
+        <a href="{% url 'home' %}" class="back-btn">Вернуться на главную</a>
 
         <form method="POST" id="parameters-form" action="{% url 'calculate' %}">
             {% csrf_token %}
