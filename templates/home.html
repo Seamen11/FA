@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Экономическая инвестиционная модель</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .table-container {
+            margin-top: 30px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #495057;
+        }
+
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 9999;
+        }
+
+        .loading img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <h2 class="text-center">Инвестиционная модель предприятия</h2>
+
+    <!-- Форма для ввода данных -->
+    <form id="investmentForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" id="useDefaultsBtn">Использовать предустановленные значения</button>
+        </div>
+
+        <div class="table-container">
+            <h5 class="text-center">Заполните таблицу с проектами</h5>
+
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th>Проект</th>
+                        <th>Уровни инвестиций (у.е.)</th>
+                        <th>Прибыль (у.е.)</th>
+                    </tr>
+                </thead>
+                <tbody id="projectTable">
+                    <tr>
+                        <td>Проект 1</td>
+                        <td><input type="text" class="form-control" name="project_1_levels" value="0, 50, 100, 150, 200, 250, 300" /></td>
+                        <td><input type="text" class="form-control" name="project_1_profits" value="0, 20, 44, 60, 75, 85, 95" /></td>
+                    </tr>
+                    <tr>
+                        <td>Проект 2</td>
+                        <td><input type="text" class="form-control" name="project_2_levels" value="0, 50, 100, 150, 200, 250, 300" /></td>
+                        <td><input type="text" class="form-control" name="project_2_profits" value="0, 5, 51, 70, 80, 90, 100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Проект 3</td>
+                        <td><input type="text" class="form-control" name="project_3_levels" value="0, 50, 100, 150, 200, 250, 300" /></td>
+                        <td><input type="text" class="form-control" name="project_3_profits" value="0, 10, 50, 65, 75, 85, 90" /></td>
+                    </tr>
+                    <tr>
+                        <td>Проект 4</td>
+                        <td><input type="text" class="form-control" name="project_4_levels" value="0, 50, 100, 150, 200, 250, 300" /></td>
+                        <td><input type="text" class="form-control" name="project_4_profits" value="0, 8, 44, 60, 72, 85, 90" /></td>
+                    </tr>
+                    <tr>
+                        <td>Проект 5</td>
+                        <td><input type="text" class="form-control" name="project_5_levels" value="0, 50, 100, 150, 200, 250, 300" /></td>
+                        <td><input type="text" class="form-control" name="project_5_profits" value="0, 16, 39, 55, 76, 92, 99" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Параметры расчета -->
+        <div class="form-group">
+            <label for="include_shocks" class="form-check-label">Учесть экономические шоки?</label>
+            <input type="checkbox" name="include_shocks" class="form-check-input" />
+        </div>
+
+        <div class="form-group">
+            <label for="use_defaults" class="form-check-label">Использовать дефолтные значения?</label>
+            <input type="checkbox" name="use_defaults" class="form-check-input" />
+        </div>
+
+        <div class="form-group">
+            <label for="include_taxes" class="form-check-label">Учесть налоги?</label>
+            <input type="checkbox" name="include_taxes" class="form-check-input" />
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success mt-3">Рассчитать</button>
+        </div>
+    </form>
+
+    <!-- Анимация загрузки -->
+    <div class="loading">
+        <img src="https://imgur.com/rUdC4kE" alt="Загрузка...">
+    </div>
+
+    <!-- Результат -->
+    <div id="resultContainer" style="display: none;">
+        <h4>Результаты расчетов</h4>
+        <div id="result">
+            <!-- Тут появится результат после расчета -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Кнопка для предустановленных значений
+    document.getElementById('useDefaultsBtn').addEventListener('click', function() {
+        const defaultLevels = [
+            "0, 50, 100, 150, 200, 250, 300",
+            "0, 50, 100, 150, 200, 250, 300",
+            "0, 50, 100, 150, 200, 250, 300",
+            "0, 50, 100, 150, 200, 250, 300",
+            "0, 50, 100, 150, 200, 250, 300"
+        ];
+        const defaultProfits = [
+            "0, 20, 44, 60, 75, 85, 95",
+            "0,  5, 51, 70, 80, 90, 100",
+            "0, 10, 50, 65, 75, 85, 90",
+            "0,  8, 44, 60, 72, 85, 90",
+            "0, 16, 39, 55, 76, 92, 99"
+        ];
+
+        // Заполняем таблицу
+        const rows = document.querySelectorAll('#projectTable tr');
+        rows.forEach((row, index) => {
+            const levelInput = row.querySelector('input[name^="project_' + (index + 1) + '_levels"]');
+            const profitInput = row.querySelector('input[name^="project_' + (index + 1) + '_profits"]');
+            levelInput.value = defaultLevels[index];
+            profitInput.value = defaultProfits[index];
+        });
+    });
+
+    // Обработка отправки формы
+    document.getElementById('investmentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Показываем анимацию загрузки
+        document.querySelector('.loading').style.display = 'block';
+
+        // Скрываем результат
+        document.getElementById('resultContainer').style.display = 'none';
+
+        // Запрашиваем результат с сервера (необходимо создать endpoint в Django)
+        fetch(window.location.href, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Скрываем анимацию
+            document.querySelector('.loading').style.display = 'none';
+
+            // Отображаем результат
+            const resultContainer = document.getElementById('result');
+            resultContainer.innerHTML = `
+                <h5>Максимальная чистая прибыль: ${data.max_profit}</h5>
+                <h6>Стратегия распределения инвестиций:</h6>
+                <ul>
+                    ${data.strategy.map((amount, index) => `<li>Проект ${index + 1}: вложить ${amount} у.е.</li>`).join('')}
+                </ul>
+                <h6>История состояний:</h6>
+                <ul>
+                    ${data.states.map(s => `<li>Этап ${s.step}: вложено ${s.invested}, прибыль ${s.profit}, остаток бюджета ${s.remaining_budget}</li>`).join('')}
+                </ul>
+            `;
+
+            // Показываем контейнер с результатами
+            document.getElementById('resultContainer').style.display = 'block';
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
